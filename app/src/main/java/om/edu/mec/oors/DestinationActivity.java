@@ -110,14 +110,6 @@ public class DestinationActivity extends FragmentActivity implements ConnectionC
         Log.v("Location",mLastLocation.toString());
         setUpMap();
 
-        if (mRequestingLocationUpdates) {
-            //startLocationUpdates();
-        }
-
-        if (mLastLocation != null) {
-//            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
-//            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
-        }
     }
 
     protected void createLocationRequest() {
