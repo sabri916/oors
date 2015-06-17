@@ -4,6 +4,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,10 +27,20 @@ public class DestinationActivity extends FragmentActivity implements ConnectionC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.v("MapTag", "OnCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destination);
-        setUpMapIfNeeded();
         buildGoogleApiClient();
+        setUpMapIfNeeded();
+    }
+
+    protected void onStart(){
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    protected void onStop(){
+        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -53,6 +65,7 @@ public class DestinationActivity extends FragmentActivity implements ConnectionC
      * method in {@link #onResume()} to guarantee that it will be called.
      */
     private void setUpMapIfNeeded() {
+        Log.v("map","SetUPMapIfNeeded");
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -72,12 +85,16 @@ public class DestinationActivity extends FragmentActivity implements ConnectionC
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
+        Log.v("map","SetUPMap!!!");
         if(mLastLocation != null){
+            Log.v("map","Marker - location is not null");
             mMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())).title("Marker"));
         }
+
     }
 
     protected synchronized void buildGoogleApiClient() {
+        Log.v("map","BuildapiClient!!");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -86,10 +103,13 @@ public class DestinationActivity extends FragmentActivity implements ConnectionC
     }
 
     public void onConnected(Bundle connectionHint) {
+        Log.v("Map","OnConnected");
+
+        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (mRequestingLocationUpdates) {
-            startLocationUpdates();
+            //startLocationUpdates();
         }
 
         if (mLastLocation != null) {
@@ -99,6 +119,7 @@ public class DestinationActivity extends FragmentActivity implements ConnectionC
     }
 
     protected void createLocationRequest() {
+        Log.v("Map","CreateLocationRequest");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
@@ -106,7 +127,7 @@ public class DestinationActivity extends FragmentActivity implements ConnectionC
     }
 
     protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
+        //LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, (com.google.android.gms.location.LocationListener) this);
     }
 
     public void onConnectionSuspended(int cause){}
