@@ -107,6 +107,8 @@ public class DestinationActivity extends FragmentActivity implements ConnectionC
 
         Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Log.v("Location",mLastLocation.toString());
+        setUpMap();
 
         if (mRequestingLocationUpdates) {
             //startLocationUpdates();
